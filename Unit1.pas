@@ -4,7 +4,9 @@ No specials components or packages needed to compile, everything is standard.
 https://github.com/milkdrop2077
 https://twitter.com/milkdrop2077
 milkdrop2077@gmail.com
-Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) © 2021 
+Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) Â© 2021
+
+update v1.0.2 2021/01/28 : bug fix when writing PSVERSION=, PSVERSION_WARP=, PSVERSION_COMP=.
 }
 unit Unit1;
 
@@ -192,6 +194,7 @@ ListTEMP: TStringList;
 ListMilk: TStringList;
 ListMilk2: TStringList;
 ListMilk3: TStringList;
+PS, PSW, PSC : integer;
 numberz,numberz2,numberz3 : tstringlist;
 
 const
@@ -407,11 +410,11 @@ var
 begin
   // Recherche de la ressource
   hwndRessource:=FindResource(0,PChar(NomRes),TypeRes);
-  // Récupération de sa taille
+  // RÃ©cupÃ©ration de sa taille
   tailleRes:=SizeofResource(0,hwndRessource);
-  // Récupération du pointeur sur le premier élément de la ressource
+  // RÃ©cupÃ©ration du pointeur sur le premier Ã©lÃ©ment de la ressource
   ptrRessource:=LockResource(LoadResource(0,hwndRessource));
-  // Création de la région à partir de la ressource
+  // CrÃ©ation de la rÃ©gion Ã  partir de la ressource
   result:=ExtCreateRegion(nil,tailleRes,ptrRessource^);
 end;
 
@@ -490,13 +493,13 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-        // Création de la fenêtre non rectangulaire
+        // CrÃ©ation de la fenÃªtre non rectangulaire
         hwndregion:=CreerRgnFromRes('regfond',RT_RCDATA);
-        // Récupération de la taille rectangulaire de la région
+        // RÃ©cupÃ©ration de la taille rectangulaire de la rÃ©gion
         GetRgnBox(hwndregion,sel);
-        // Ajuste la taille de la fenêtre
+        // Ajuste la taille de la fenÃªtre
         SetWindowPos(form1.Handle,HWND_TOP,0,0,sel.Right-sel.Left,sel.Bottom,SWP_NOMOVE or SWP_NOOWNERZORDER);
-        // Change la forme de la fenêtre à partir de la région
+        // Change la forme de la fenÃªtre Ã  partir de la rÃ©gion
         SetWindowRgn(form1.Handle,hwndregion,true);
         //hwndregion:=CreerRgnFromRes('REGION',RT_RCDATA);
 
@@ -760,6 +763,7 @@ end;
 procedure MILKRANDOM;
 var
 i,j,R,RWC : integer;
+psv : string;
 begin
 
     R := Random(L);
@@ -780,6 +784,9 @@ begin
     for i := 0 to ListTEMP.Count-1 do begin
     if Pos('warp_', ListTEMP[i])<>0 then ListMilk.Add(ListTEMP[i]);
     end;
+    for i := 0 to ListTEMP.Count-1 do begin
+    if Pos('PSVERSION_WARP=', ListTEMP[i])<>0 then begin psv := ListTEMP[i]; PSW := strtoint(psv[16]); break;
+    end;end;
     ListTEMP.Clear;
     if Form1.LabelWC.Font.Color = cllime then ListMilk3.Add('Warp code from : '+extractfilename(ListFilesWC.Strings[RWC])) else ListMilk3.Add('Warp code from : '+extractfilename(ListFiles.Strings[R]));
 
@@ -791,6 +798,9 @@ begin
     for i := 0 to ListTEMP.Count-1 do begin
     if Pos('comp_', ListTEMP[i])<>0 then ListMilk.Add(ListTEMP[i]);
     end;
+    for i := 0 to ListTEMP.Count-1 do begin
+    if Pos('PSVERSION_COMP=', ListTEMP[i])<>0 then begin psv := ListTEMP[i]; PSC := strtoint(psv[16]); break;
+    end;end;
     ListTEMP.Clear;
     if Form1.LabelWC.Font.Color = cllime then ListMilk3.Add('Comp code from : '+extractfilename(ListFilesWC.Strings[RWC])) else ListMilk3.Add('Comp code from : '+extractfilename(ListFiles.Strings[R]));
 
@@ -810,6 +820,7 @@ end;
 procedure MILKRANDOMALL;
 var
 i,j,R : integer;
+psv : string;
 begin
 
     R := Random(L);
@@ -842,6 +853,9 @@ begin
     for i := 0 to ListTEMP.Count-1 do begin
     if Pos('warp_', ListTEMP[i])<>0 then ListMilk.Add(ListTEMP[i]);
     end;
+    for i := 0 to ListTEMP.Count-1 do begin
+    if Pos('PSVERSION_WARP=', ListTEMP[i])<>0 then begin psv := ListTEMP[i]; PSW := strtoint(psv[16]); break;
+    end;end;
     ListTEMP.Clear;
     ListMilk3.Add('Warp code from : '+extractfilename(ListFiles.Strings[R]));
 
@@ -850,6 +864,9 @@ begin
     for i := 0 to ListTEMP.Count-1 do begin
     if Pos('comp_', ListTEMP[i])<>0 then ListMilk.Add(ListTEMP[i]);
     end;
+    for i := 0 to ListTEMP.Count-1 do begin
+    if Pos('PSVERSION_COMP=', ListTEMP[i])<>0 then begin psv := ListTEMP[i]; PSC := strtoint(psv[16]); break;
+    end;end;
     ListTEMP.Clear;
     ListMilk3.Add('Comp code from : '+extractfilename(ListFiles.Strings[R]));
 
@@ -1213,11 +1230,13 @@ for X := 1 to XXXX do begin // XXXX = Number of presets to create
 
 
     ListMilk3.Add('################################################################################');
-    //MASHUP Upgrade to pixel shader 3
+    // BUG FIX 1.0.2
+    if not CheckBox2.Checked then begin
     ListMilk3.Add('MILKDROP_PRESET_VERSION=201');
-    ListMilk3.Add('PSVERSION=3');
-    ListMilk3.Add('PSVERSION_WARP=3');
-    ListMilk3.Add('PSVERSION_COMP=3');
+    PS := Max(PSW, PSC);
+    ListMilk3.Add('PSVERSION='+inttostr(PS));
+    ListMilk3.Add('PSVERSION_WARP='+inttostr(PSW));
+    ListMilk3.Add('PSVERSION_COMP='+inttostr(PSC)); end;
 
     ListMilk3.Add(ListMilk2.Text);//add mashup
 
