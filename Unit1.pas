@@ -6,7 +6,12 @@ https://twitter.com/milkdrop2077
 milkdrop2077@gmail.com
 Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) © 2021
 
-update v1.0.2 2021/01/28 : bug fix when writing PSVERSION=, PSVERSION_WARP=, PSVERSION_COMP=.
+update v1.0.3 2021/02/01 :
+-bug fix in MILKRANDOMALL, more break added if no per_frame_ lines found.
+-bug fix in MILKFLOAT3, check if there is any letters then break.
+
+update v1.0.2 2021/01/28 :
+-bug fix when writing PSVERSION=, PSVERSION_WARP=, PSVERSION_COMP=.
 }
 unit Unit1;
 
@@ -827,6 +832,9 @@ begin
     ListTEMP.LoadFromFile(ListFiles.Strings[R]);
     for i := 0 to ListTEMP.Count-1 do begin
     if Pos('per_frame_', ListTEMP[i])<>0 then break;
+    if Pos('per_pixel_', ListTEMP[i])<>0 then break; // bug if no per_frame_ code in preset, update 1.0.3
+    if Pos('warp_', ListTEMP[i])<>0 then break; // bug if no per_pixel_ code in preset
+    if Pos('comp_', ListTEMP[i])<>0 then break; // bug if no warp_ code in preset
     ListMilk.Add(ListTEMP[i]);
     end;
     ListTEMP.Clear;
@@ -950,8 +958,10 @@ end;
 //Randomize colors : find and change all float3 values
 procedure MILKFLOAT3(const numberz: TStringList);
 var
-a,b,c,i,start : integer;
+a,b,c,i,j,start : integer;
 s,ss,sss,t,finale: string;
+label
+FoundLetters;
 begin
 
  for a := 1 to numberz.Count-1 do begin //loop
@@ -962,8 +972,7 @@ begin
              if c <>0 then begin      //if found 'float3' then begin
              t := Copy(sss, c, length(sss)); //+6 start after 'float3'[6]
              s := ExtractTextBetween(t,'float3(',')');
-             if s[1] <> ' ' then begin if not IsStrANumber(s[1])then break; end else begin //for bug, check if number after 'float3(#' or 'float3( #'
-             if not IsStrANumber(s[2])then break; end;                                     //bug ex : float3(texsize.zw * 4, 0) or float3(q4,q5,q6);
+             for j := 0 to length(s) do begin if s[ j ] in ['a' .. 'z' , 'A' .. 'Z'] then Goto FoundLetters else end ; //check if editable not like ex : float3(texsize.zw * 4, 0) or float3(q4,q5,q6);
              ss := floattostr(random(30)/10)+','+floattostr(random(30)/10)+','+floattostr(random(30)/10);
              finale := NewStringReplace(sss, s, ss,[rfReplaceAll, rfIgnoreCase]);
              sss := finale;
@@ -973,13 +982,13 @@ begin
              if c <>0 then begin
              t := Copy(sss, c, length(sss)); //+6 start after 'float3'[6]
              s := ExtractTextBetween(t,'float3 (',')');
-             if s[1] <> ' ' then begin if not IsStrANumber(s[1])then break; end else begin //for bug, check if number after 'float3(#' or 'float3( #'
-             if not IsStrANumber(s[2])then break; end;                                     //bug ex : float3(texsize.zw * 4, 0) or float3(q4,q5,q6);
+             for j := 0 to length(s) do begin if s[ j ] in ['a' .. 'z' , 'A' .. 'Z'] then Goto FoundLetters else end ; //check if editable not like ex : float3(texsize.zw * 4, 0) or float3(q4,q5,q6);
              ss := floattostr(random(30)/10)+','+floattostr(random(30)/10)+','+floattostr(random(30)/10);
              finale := NewStringReplace(sss, s, ss,[rfReplaceAll, rfIgnoreCase]);
              sss := finale;
              ListMilk2[a] := sss;
              end;
+             FoundLetters : break;
 end;
 end;
 end;
