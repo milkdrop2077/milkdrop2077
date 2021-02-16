@@ -13,6 +13,8 @@ LTC: LdawAcH5CkUr1wdM57vRsny4R7kvuZdZvR
 DOGE: D74BdUpJwaP3A9QWeUuoGCk1ZSdVgZspNZ
 paypal.me/milkdrop2077
 
+update v2.0.1 2021/02/16 :
+-bug fix check if output folder is valid
 
 update v2.0 2021/02/10 :
 -project ported from Delphi 7 to Lazarus.
@@ -1596,7 +1598,7 @@ addmilk : tstringlist;
 choix: integer;
 replace : boolean;
 begin
-
+if not directoryexists(ChoixRepertoire2) then begin showmessage('Please select a valid OUTPUT folder first'); exit; end;
 if ImgOn2.Visible = true then begin if LabelFound.Font.Color = clRed then begin showmessage('Please select a valid INPUT presets folder first'); exit; end; end;
 if Edit1.Visible then begin
 if Edit1.Text = '' then begin showmessage('Please choose the number of presets to create'); exit; end;

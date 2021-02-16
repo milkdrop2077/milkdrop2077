@@ -8902,8 +8902,8 @@ object Form1: TForm1
       Left = 375
       Height = 18
       Top = 3
-      Width = 3840
-      Caption = 'MilkDrop2077 v2.0   1. Choose if you want to autogenerate or mashup presets, 2. Select input mashup folder (*.milk preset folder) and/or output folder (where the new presets will be created), 3. Choose the number of presets to create (1 to 9999), 4. Select the level of randomization (0 to 5), 5. Click on GO!  Check the options for more details... '
+      Width = 3862
+      Caption = 'MilkDrop2077 v2.0.1   1. Choose if you want to autogenerate or mashup presets, 2. Select input mashup folder (*.milk preset folder) and/or output folder (where the new presets will be created), 3. Choose the number of presets to create (1 to 9999), 4. Select the level of randomization (0 to 5), 5. Click on GO!  Check the options for more details... '
       Color = clBlack
       Font.CharSet = OEM_CHARSET
       Font.Color = clWhite
