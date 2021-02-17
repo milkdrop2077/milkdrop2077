@@ -13,8 +13,10 @@ LTC: LdawAcH5CkUr1wdM57vRsny4R7kvuZdZvR
 DOGE: D74BdUpJwaP3A9QWeUuoGCk1ZSdVgZspNZ
 paypal.me/milkdrop2077
 
-update v2.0.1 2021/02/16 :
+update v2.0.2 2021/02/17 :
 -bug fix check if output folder is valid
+-removed s : string from public variables
+-added a try except end; to the GO! click
 
 update v2.0 2021/02/10 :
 -project ported from Delphi 7 to Lazarus.
@@ -247,7 +249,7 @@ ChoixRepertoire : string;
 ChoixRepertoire2 : string;
 ChoixRepertoire3 : string;
 x, XXXX, RANDOMZ, L, LWC, total, total2, lastt, lasttt : integer;
-s : string;
+
 
 ListFiles: TStringList;
 ListFilesWC: TStringList;
@@ -492,6 +494,7 @@ procedure RCGen2(Path, Mask: String; List: TStrings; SubFolder: Boolean);
 var
   Attrib, k : Integer;
   Search: TSearchRec;
+  s : string;
 begin
   Attrib := faArchive + faReadOnly + faHidden;
   if Path[Length(Path)] <> '\' then Path := Path + '\';
@@ -1642,7 +1645,7 @@ if Edit1.Text <> '' then XXXX := strtoint(Edit1.Text);
 
 for X := 1 to XXXX do begin // XXXX = Number of presets to create
 
-
+try
 
 // AUTOGENERATE //
 if ImgOn1.Visible = true then begin
@@ -1864,6 +1867,7 @@ if ImgOn2.Visible = true then begin
     Application.ProcessMessages;
     sleep(1); // to avoid bug creating identical presets with LAZARUS, sleep act kind of like Application.ProcessMessages I think .
 end;
+except end;
 end;
 end;
 
