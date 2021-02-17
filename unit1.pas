@@ -1601,6 +1601,8 @@ addmilk : tstringlist;
 choix: integer;
 replace : boolean;
 begin
+
+if not directoryexists(ChoixRepertoire2) then CreateDir(ChoixRepertoire2);
 if not directoryexists(ChoixRepertoire2) then begin showmessage('Please select a valid OUTPUT folder first'); exit; end;
 if ImgOn2.Visible = true then begin if LabelFound.Font.Color = clRed then begin showmessage('Please select a valid INPUT presets folder first'); exit; end; end;
 if Edit1.Visible then begin
@@ -1626,7 +1628,6 @@ ImageP13.Visible := false;
 exit;
 end;
 
-if not directoryexists(ChoixRepertoire2) then CreateDir(ChoixRepertoire2);
 if ChoixRepertoire2[Length(ChoixRepertoire2)] <> '\' then ChoixRepertoire2 := ChoixRepertoire2 + '\';
 replace := false;
 
