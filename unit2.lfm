@@ -9,7 +9,6 @@ object Form2: TForm2
   ClientWidth = 600
   Color = clBlack
   DesignTimePPI = 144
-  FormStyle = fsStayOnTop
   OnClose = FormClose
   OnShow = FormShow
   LCLVersion = '2.0.10.0'

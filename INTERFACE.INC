@@ -1,4 +1,47 @@
 
+// To Kill MilkDrop if crashed, uses JwaTlHelp32
+function KillTask(ExeFileName: string): Integer;
+const
+  PROCESS_TERMINATE = $0001;
+var
+  ContinueLoop: BOOL;
+  FSnapshotHandle: THandle;
+  FProcessEntry32: TProcessEntry32;
+begin
+  Result := 0;
+  FSnapshotHandle := CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+  FProcessEntry32.dwSize := SizeOf(FProcessEntry32);
+  ContinueLoop := Process32First(FSnapshotHandle, FProcessEntry32);
+
+  while Integer(ContinueLoop) <> 0 do
+  begin
+    if ((UpperCase(ExtractFileName(FProcessEntry32.szExeFile)) =
+      UpperCase(ExeFileName)) or (UpperCase(FProcessEntry32.szExeFile) =
+      UpperCase(ExeFileName))) then
+      Result := Integer(TerminateProcess(
+                        OpenProcess(PROCESS_TERMINATE,
+                                    BOOL(0),
+                                    FProcessEntry32.th32ProcessID),
+                                    0));
+     ContinueLoop := Process32Next(FSnapshotHandle, FProcessEntry32);
+  end;
+  CloseHandle(FSnapshotHandle);
+end;
+
+
+// HOTKEY to Kill MilkDrop if crashed
+function WndCallback(Ahwnd: HWND; uMsg: UINT; wParam: WParam; lParam: LParam):LRESULT; stdcall;
+begin
+  if (uMsg=WM_HOTKEY) and (WParam=MY_ID) then
+    begin
+      //Application.Restore;
+      KillTask('winamp.original'); //KILL WACUP
+      KillTask('winamp.exe'); //KILL WINAMP
+    end;
+  result:=CallWindowProc(PrevWndProc,Ahwnd, uMsg, WParam, LParam);
+end;
+
+
 // To find milk files in folder + sub-folders
 // Delphi code, to work on Lazarus you must put Windows before Classes in uses :
 // uses Windows, Classes << Works
@@ -160,6 +203,17 @@ begin
         XXXX := 100;
         RANDOMZ := 0;
         LVLRandom;
+
+        //Register HOTKEY F10
+        PrevWndProc:=Windows.WNDPROC(SetWindowLong(Self.Handle,GWL_WNDPROC,PtrInt(@WndCallback)));
+        RegisterHotKey(Self.Handle,MY_ID,0,vk_F10); // vk_F10 = F10
+end;
+
+
+//UnRegisterHotkey F10
+procedure TForm1.FormDestroy(Sender: TObject);
+begin
+  UnRegisterHotkey(Self.Handle,MY_ID);
 end;
 
 
@@ -542,7 +596,7 @@ begin Form2.Show; end;
 procedure TForm1.Timer1Timer(Sender: TObject);
 begin
 LabelScrolling.Left := LabelScrolling.Left -1;
-if LabelScrolling.Left = -3840 then Timer1.Enabled:=false;
+if LabelScrolling.Left = -4577 then Timer1.Enabled:=false;
 end;
 
 

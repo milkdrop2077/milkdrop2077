@@ -39,7 +39,6 @@ end;
 
 var
 Form2: TForm2;
-hWnd:THandle;
 Star:array[0..StarCount-1] of TStar;
 xcenter:integer;
 ycenter:integer;

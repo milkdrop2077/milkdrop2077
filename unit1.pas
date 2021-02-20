@@ -3,7 +3,7 @@ MilkDrop2077 source code. Coded with Lazarus 2.0.10. Probably works on newer and
 No specials components or packages needed to compile, everything is standard.
 https://github.com/milkdrop2077
 https://twitter.com/milkdrop2077
-milkdrop2077@gmail.com
+http://forums.winamp.com/showthread.php?t=456590
 Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) © 2021
 
 Support development by donating :)
@@ -12,6 +12,11 @@ ETH: 0xE52Eb8A2d8c7DC5Be207A393e29C8f350bBeCA3e
 LTC: LdawAcH5CkUr1wdM57vRsny4R7kvuZdZvR
 DOGE: D74BdUpJwaP3A9QWeUuoGCk1ZSdVgZspNZ
 paypal.me/milkdrop2077
+
+update v2.0.4 2021/02/20 :
+-fixed randomize everything for autogenerate
+-FormStyle changed from fsStayOnTop to fsNormal
+-added a hotkey F10 to close winamp/wacup in case of a milkdrop crash
 
 update v2.0.3 2021/02/18 :
 -I should use CTRL+D to format the code sorry Nitorami :P
@@ -26,7 +31,7 @@ update v2.0.2 2021/02/17 :
 -added a try except end; to the GO! click
 
 update v2.0 2021/02/10 :
--project ported from Delphi 7 to Lazarus
+-project ported from Delphi 7 to Lazarus.
 -added autogenerate
 -added drag & drop
 -added randomize everything
@@ -48,7 +53,7 @@ interface
 
 uses
   Windows, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, Buttons,
-  StdCtrls, Variants, CheckLst, StrUtils, Math;
+  StdCtrls, Variants, CheckLst, StrUtils, Math, JwaTlHelp32;
 
 type
 
@@ -169,6 +174,7 @@ type
     procedure Edit2MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer
       );
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormDropFiles(Sender: TObject; const FileNames: array of String);
     procedure Image1MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -268,9 +274,11 @@ numberz,numberz2,numberz3 : tstringlist;
 
 md :boolean;
 x0, y0 :integer;
+PrevWndProc: WNDPROC;
 
 const
 ForceFLOT3 : array[1..3] of string = ('ret -= float3(1,0,0); // MilkDrop 2077','ret -= float3(0,1,0); // MilkDrop 2077','ret -= float3(0,0,1); // MilkDrop 2077');
+MY_ID=1;
 
 
 implementation
@@ -850,8 +858,8 @@ if ImgOn1.Visible = true then begin
     ListMilk3.Add('AUTO-GENERATED with MilkDrop2077 on : '+DateToStr(today)+' at '+TimeToStr(today));
 
     //Random ALL
-    //not working well for AUTOGENERATE, for some reasons presets are empty after generating ~30+ presets
-    //if CheckBox7RandALL.Checked then begin LVLRandomALL; Application.ProcessMessages; sleep(1); end;
+    if CheckBox7RandALL.Checked then begin LVLRandomALL; Application.ProcessMessages; sleep(1); Application.ProcessMessages; //To fix bug of empty generated presets. Force Application.ProcessMessages
+    ListMilk3.Add('RANDOMIZE EVERYTHING : ON'); end;
 
     //NO MASHUP
     if CheckBox3MashOFF.Checked then begin
@@ -957,8 +965,8 @@ if ImgOn2.Visible = true then begin
     ListMilk3.Add('Created with MilkDrop2077 on : '+DateToStr(today)+' at '+TimeToStr(today));
 
     //Random ALL
-    if CheckBox7RandALL.Checked then begin LVLRandomALL; Application.ProcessMessages; sleep(1); end;
-    ListMilk3.Add('RANDOMIZE EVERYTHING : ON');
+    if CheckBox7RandALL.Checked then begin LVLRandomALL; Application.ProcessMessages; sleep(1); Application.ProcessMessages; //To fix bug of empty generated presets. Force Application.ProcessMessages
+    ListMilk3.Add('RANDOMIZE EVERYTHING : ON'); end;
 
     //NO MASHUP
     if CheckBox3MashOFF.Checked then begin
