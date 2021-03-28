@@ -19,7 +19,7 @@ update v3.0.0 2021/03/28 :
 -fixed a lot of TStringList bugs
 -autogenerate really works 100% now :)
 -much faster randomize everything code, much more stable
--added procedure CHANGEBITSOFCODE
+-added procedure CHANGEBITSOFCODE (disabled for the moment, need improvement)
 
 update v2.0.4 2021/02/20 :
 -fixed randomize everything for autogenerate
@@ -976,7 +976,7 @@ if ImgOn1.Visible = true then begin
     if ForceRandColor then begin FORCEMILKFLOAT3(ListMilk); ListMilk3.Add('Force randomize colors : ON'); end;
 
     //Randomly change bits of code
-    if ChangeBits then begin CHANGEBITSOFCODE; ListMilk3.Add('Changed BITS of Code : '+inttostr(totalBits)); end;
+    //if ChangeBits then begin CHANGEBITSOFCODE; ListMilk3.Add('Changed BITS of Code : '+inttostr(totalBits)); end;
 
     //Add an extra effect to the composite shader
     if AddEffect then begin
@@ -1075,7 +1075,7 @@ if ImgOn2.Visible = true then begin
     if ForceRandColor then begin FORCEMILKFLOAT3(ListMilk); ListMilk3.Add('Force randomize colors : ON'); end;
 
     //Randomly change bits of code
-    if ChangeBits then begin CHANGEBITSOFCODE; ListMilk3.Add('Changed BITS of Code : '+inttostr(totalBits)); end;
+    //if ChangeBits then begin CHANGEBITSOFCODE; ListMilk3.Add('Changed BITS of Code : '+inttostr(totalBits)); end;
 
     //Add an extra effect to the composite shader
     if AddEffect then begin
