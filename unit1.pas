@@ -737,7 +737,7 @@ for i := ListMilk.count - 1 downto bpos do begin // start from bottom to middle
     Bits_y := true;
     totalBits := totalBits+1;
   end; end;
-
+{
   if not Bits_abs then begin
   if Pos('abs', ListMilk[i])<>0 then begin
     BitsofCode := NewStringReplace(ListMilk[i], 'abs', 'sqr',[rfIgnoreCase]);
@@ -745,7 +745,7 @@ for i := ListMilk.count - 1 downto bpos do begin // start from bottom to middle
     Bits_abs := true;
     totalBits := totalBits+1;
   end; end;
-
+}
 end;
 end;
 
